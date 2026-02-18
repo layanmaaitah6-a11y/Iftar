@@ -2,100 +2,129 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>brainrot</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-    
+    <title>للصايمين اليوم فقط</title>
     <style>
-        body { 
-            font-family: 'Cairo', sans-serif; /* تغيير الخط لخط كايرو */
-            text-align: center; 
-            margin-top: 80px; 
-            background-color: #f4f7f6;
-            font-size: 1.2rem; /* تكبير الخط العام */
+        :root {
+            --espresso: #3e2723;
+            --mocha: #6f4e37;
+            --latte: #c2b280;
+            --cream: #f5f5dc;
+            --success: #28a745;
         }
 
-        h3 {
-            font-size: 2.5rem; /* تكبير حجم السؤال */
-            color: #333;
-            margin-bottom: 30px;
+        body {
+            background-color: var(--cream);
+            color: var(--espresso);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column; /* ترتيب العناصر عمودياً */
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
         }
 
-        input { 
-            padding: 15px; 
-            font-family: 'Cairo', sans-serif;
-            font-size: 1.1rem;
-            border-radius: 10px; 
-            border: 2px solid #ddd; 
-            width: 250px;
-            outline: none;
-            transition: border 0.3s;
+        #display-container {
+            padding: 40px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(62, 39, 35, 0.1);
+            text-align: center;
+            z-index: 1;
         }
 
-        input:focus {
-            border-color: #28a745;
-        }
-
-        button { 
-            padding: 15px 30px; 
-            font-family: 'Cairo', sans-serif;
-            font-size: 1.1rem;
+        #c {
+            font-size: 6rem;
             font-weight: bold;
-            cursor: pointer; 
-            background-color: #28a745; 
-            color: white; 
-            border: none; 
-            border-radius: 10px; 
-            margin-right: 10px;
-            transition: background 0.3s;
+            color: var(--mocha);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        button:hover {
-            background-color: #218838;
+        /* تنسيق شريط التقدم ليكون أنيقاً */
+        progress {
+            width: 300px;
+            height: 20px;
+            appearance: none;
+            margin-top: 20px;
         }
 
-        #resultArea { 
-            margin-top: 30px; 
-            font-size: 1.5rem; /* تكبير خط النتيجة */
+        progress::-webkit-progress-bar {
+            background-color: #eee;
+            border-radius: 10px;
         }
 
-        video { 
-            margin-top: 20px; 
-            border-radius: 15px; 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15); 
+        progress::-webkit-progress-value {
+            background-color: var(--mocha);
+            border-radius: 10px;
+            transition: width 0.3s ease;
         }
 
-        .error-text { color: #d9534f; font-weight: bold; }
-        .success-text { color: #28a745; font-weight: bold; }
+        .pop { transform: scale(1.3); }
+
+        .final-text {
+            font-size: 3.5rem;
+            color: var(--espresso);
+            animation: fadeIn 0.8s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
     </style>
 </head>
 <body>
 
-    <h3>كم ناتج: 2 + 2 ؟</h3>
+<div id="display-container">
+    <div id="c">7</div>
+    <progress id="p" value="0" max="70"></progress>
+</div>
+
+<script>
+    const display = document.getElementById("c");
+    const progressBar = document.getElementById("p");
     
-    <input type="number" id="answerInput" placeholder="اكتب إجابتك هنا">
-    <button onclick="checkAnswer()">تحقق من الإجابة</button>
+    let secondsLeft = 7;
+    let progressValue = 0;
+    const totalDuration = 7; // إجمالي الثواني
 
-    <div id="resultArea"></div>
+    // مؤقت العد التنازلي (كل ثانية)
+    const timer = setInterval(() => {
+        secondsLeft--;
+        
+        // تأثير الحركة (Pop)
+        display.classList.remove('pop');
+        void display.offsetWidth; 
+        display.classList.add('pop');
 
-    <script>
-        function checkAnswer() {
-            var userAnswer = document.getElementById("answerInput").value;
-            var resultArea = document.getElementById("resultArea");
-
-            if (userAnswer == 3) {
-                resultArea.innerHTML = `
-                    <p class="success-text">من فضلك بطل مخدرات.... شو فطوركم اليوم؟</p>
-                    <video width="400" height="300" controls autoplay>
-                      <source src="https://video.twimg.com/tweet_video/HBcIQVhXoAAGNuu.mp4" type="video/mp4">
-                      متصفحك لا يدعم تشغيل الفيديو.
-                    </video>
-                `;
-            } else {
-                resultArea.innerHTML = `<p class="error-text">غش: الجواب الصحيح ناقص واحد</p>`;
-            }
+        if (secondsLeft <= 0) {
+            clearInterval(timer);
+            clearInterval(progressInterval);
+            
+            // الحالة النهائية
+            progressBar.value = 70;
+            display.innerHTML = "شو فطوركم اليوم؟ ☕";
+            display.className = "final-text";
+            
+            // حركة إضافية: إخفاء شريط التقدم عند النهاية
+            progressBar.style.display = "none";
+        } else {
+            display.innerText = secondsLeft;
         }
-    </script>
+    }, 1000);
+
+    // مؤقت شريط التقدم (سلس جداً - يتحدث كل 100 مللي ثانية)
+    const progressInterval = setInterval(() => {
+        progressValue += 1;
+        progressBar.value = progressValue;
+        
+        if (progressValue >= 70) {
+            clearInterval(progressInterval);
+        }
+    }, 100);
+</script>
 
 </body>
 </html>
-
