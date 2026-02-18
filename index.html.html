@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>????</title>
+    <style>
+        :root {
+            --espresso: #3e2723;
+            --mocha: #6f4e37;
+            --latte: #c2b280;
+            --cream: #f5f5dc;
+        }
+
+        body {
+            background-color: var(--cream);
+            color: var(--espresso);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #display-container {
+            padding: 40px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(62, 39, 35, 0.1);
+            transition: all 0.5s ease;
+        }
+
+        #c {
+            font-size: 5rem;
+            font-weight: bold;
+            color: var(--mocha);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .pop {
+            transform: scale(1.2);
+        }
+
+        .final-text {
+            font-size: 3.5rem;
+            color: var(--espresso);
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div id="display-container">
+    <div id="c">7</div>
+</div>
+
+<script>
+    const display = document.getElementById("c");
+    let n = 7;
+
+    const timer = setInterval(() => {
+        n--;
+        
+        // Add a little "pop" animation effect
+        display.classList.remove('pop');
+        void display.offsetWidth; // Trigger reflow
+        display.classList.add('pop');
+
+        if (n <= 0) {
+            clearInterval(timer);
+            display.innerText = "شو فطوركم اليوم؟ ☕";
+            display.className = "final-text";
+        } else {
+            display.innerText = n;
+        }
+    }, 1000);
+</script>
+
+</body>
+</html>
