@@ -1,141 +1,100 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>brainrot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            font-family: 'Cairo', sans-serif; /* تغيير الخط لخط كايرو */
+            text-align: center; 
+            margin-top: 80px; 
+            background-color: #f4f7f6;
+            font-size: 1.2rem; /* تكبير الخط العام */
+        }
 
-<title>chase</title>
+        h3 {
+            font-size: 2.5rem; /* تكبير حجم السؤال */
+            color: #333;
+            margin-bottom: 30px;
+        }
 
-<style>
-    :root{
-        --bg:#f4f6f9;
-        --danger:#B58B82;
-        --success:#2ed573;
-        --info:#1e90ff;
-    }
+        input { 
+            padding: 15px; 
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.1rem;
+            border-radius: 10px; 
+            border: 2px solid #ddd; 
+            width: 250px;
+            outline: none;
+            transition: border 0.3s;
+        }
 
-    *{
-        box-sizing:border-box;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    }
+        input:focus {
+            border-color: #28a745;
+        }
 
-    body{
-        margin:0;
-        height:100vh;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        background:linear-gradient(135deg,#eef2f7,#dfe6ee);
-        overflow:hidden;
-        touch-action:none;
-    }
+        button { 
+            padding: 15px 30px; 
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer; 
+            background-color: #28a745; 
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            margin-right: 10px;
+            transition: background 0.3s;
+        }
 
-    button{
-        border:none;
-        cursor:pointer;
-        font-weight:600;
-        transition:all .25s ease;
-    }
+        button:hover {
+            background-color: #218838;
+        }
 
-    /* الزر الهارب */
-    #b{
-        position:absolute;
-        padding:15px 28px;
-        font-size:1.1rem;
-        background:var(--danger);
-        color:#fff;
-        border-radius:50px;
-        box-shadow:0 10px 25px rgba(0,0,0,.15);
-        white-space:nowrap;
-    }
+        #resultArea { 
+            margin-top: 30px; 
+            font-size: 1.5rem; /* تكبير خط النتيجة */
+        }
 
-    #b:hover{
-        transform:scale(1.05);
-        box-shadow:0 12px 30px rgba(0,0,0,.2);
-    }
+        video { 
+            margin-top: 20px; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15); 
+        }
 
-    /* الزر الثابت */
-    #finalBtn{
-        display:none;
-        padding:20px 45px;
-        font-size:1.3rem;
-        background:var(--success);
-        color:#fff;
-        border-radius:16px;
-        box-shadow:0 12px 30px rgba(0,0,0,.12);
-    }
-
-    #finalBtn:hover{
-        transform:translateY(-3px);
-        box-shadow:0 16px 35px rgba(0,0,0,.18);
-    }
-</style>
+        .error-text { color: #d9534f; font-weight: bold; }
+        .success-text { color: #28a745; font-weight: bold; }
+    </style>
 </head>
-
 <body>
 
-<button id="b">اضغطني</button>
-<button id="finalBtn">أنا نفسي أسمع كلمة بيبي</button>
+    <h3>كم ناتج: 2 + 2 ؟</h3>
+    
+    <input type="number" id="answerInput" placeholder="اكتب إجابتك هنا">
+    <button onclick="checkAnswer()">تحقق من الإجابة</button>
 
-<script>
-const b = document.getElementById("b");
-const finalBtn = document.getElementById("finalBtn");
+    <div id="resultArea"></div>
 
-let moves = 0;
-const maxMoves = 6;
+    <script>
+        function checkAnswer() {
+            var userAnswer = document.getElementById("answerInput").value;
+            var resultArea = document.getElementById("resultArea");
 
-const messages = [
-    "فاتك!",
-    "كمان مرة",
-    "آسف",
-    "خلص بمزح",
-	 "آخر مرة جد",
-    "دعابة يا زلمة"
-   
-];
-
-function escape(e){
-    if(moves < maxMoves){
-
-        if(e.type === "touchstart") e.preventDefault();
-
-        const padding = 20;
-        const maxX = window.innerWidth - b.offsetWidth - padding;
-        const maxY = window.innerHeight - b.offsetHeight - padding;
-
-        const randomX = Math.random() * maxX;
-        const randomY = Math.random() * maxY;
-
-        b.style.left = Math.max(10, randomX) + "px";
-        b.style.top = Math.max(10, randomY) + "px";
-
-        b.innerText = messages[moves];
-        moves++;
-
-    }else{
-        b.innerText = "خلص تعبت";
-        b.style.backgroundColor = "#ff7f50";
-        b.style.cursor = "pointer";
-    }
-}
-
-b.addEventListener("mouseover", escape);
-b.addEventListener("touchstart", escape);
-
-b.addEventListener("click", () => {
-    if(moves >= maxMoves){
-        b.style.display = "none";
-        finalBtn.style.display = "block";
-    }
-});
-
-finalBtn.addEventListener("click", () => {
-    finalBtn.innerText = "شو فطوركم اليوم؟ 🍳";
-	finalBtn.style.color = "#000000";
-    finalBtn.style.backgroundColor = "#FFFFFF";
-});
-</script>
+            if (userAnswer == 3) {
+                resultArea.innerHTML = `
+                    <p class="success-text">من فضلك بطل مخدرات.... شو فطوركم اليوم؟</p>
+                    <video width="400" height="300" controls autoplay>
+                      <source src="https://video.twimg.com/tweet_video/HBcIQVhXoAAGNuu.mp4" type="video/mp4">
+                      متصفحك لا يدعم تشغيل الفيديو.
+                    </video>
+                `;
+            } else {
+                resultArea.innerHTML = `<p class="error-text">غش: الجواب الصحيح ناقص واحد</p>`;
+            }
+        }
+    </script>
 
 </body>
 </html>
-
